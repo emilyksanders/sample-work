@@ -1,0 +1,121 @@
+# Adding execute permission to SCRIPT
+git update-index --chmod=+x $SCRIPT
+
+# Clean up new objects
+git clean -fd
+
+# Prune orphaned local tracking branches
+git remote prune origin
+
+# Setup global cache
+git config --global credential.helper 'cache --timeout=900'
+
+
+# ######################################
+# Merge conflicts
+# ######################################
+
+
+# ------------------------------------------------
+# ------------------------------------------------
+# First make sure your my-feature-branch is up to date with main
+# ------------------------------------------------
+# ------------------------------------------------
+# Get latest main from GitHub
+git checkout main
+git pull
+
+# Push local my-feature-branch to GitHub for safe keeping
+git checkout my-feature-branch
+git push origin my-feature-branch
+
+# Merge main into my-feature-branch to flush out conflicts
+git merge main
+
+
+# Assume there is a merge conflict on file "path/to/file"
+# You have three choices:
+
+# ------------------------------------------------
+# 1. Edit the path/to/file to resolve conflicts
+#    Look for <<<<<<<, =======, and >>>>>>> in conflicted file.
+#    These show the conflicted sections of the file.
+git add path/to/file
+git commit -m "Resolved merge conflict on path/to/file by editing"
+git push origin my-feature-branch
+
+
+# ------------------------------------------------
+# 2. Take the changes from main and lose changes on my-feature-branch
+#    Note that "theirs" refers to main branch because you have my-feature-branch checked out
+git checkout --theirs path/to/file
+
+# Double check, but local version of path/to/file should be same as main on GitHub
+# If it is then add and commit to complete the merge
+git add path/to/file
+git commit -m "Resolved merge conflict on path/to/file by accepting main branch version"
+git push origin my-feature-branch
+
+
+# ------------------------------------------------
+# 3. Take the changes from my-feature-branch and lose changes on main
+#    Note that "ours" refers to my-feature-branch branch because you have my-feature-branch checked out
+git checkout --ours path/to/file
+
+# Double check, but local version of path/to/file should be same as my-feature-branch on GitHub
+# If it is then add and commit to complete the merge
+git add path/to/file
+git commit -m "Resolved merge conflict on path/to/file by accepting my-feature-branch branch version"
+git push origin my-feature-branch
+
+
+
+# ------------------------------------------------
+# ------------------------------------------------
+# Now attempt to merge your my-feature-branch into main
+# ------------------------------------------------
+# ------------------------------------------------
+
+# Get latest main from GitHub
+git checkout main
+git pull
+
+# Merge my-feature-branch into main
+git merge my-feature-branch
+
+
+# Assume there is a merge conflict on file "path/to/file"
+# You have three choices:
+
+# ------------------------------------------------
+# 1. Edit the path/to/file to resolve conflicts
+#    Look for <<<<<<<, =======, and >>>>>>> in conflicted file.
+#    These show the conflicted sections of the file.
+git add path/to/file
+git commit -m "Resolved merge conflict on path/to/file by editing"
+git push origin main
+
+
+# ------------------------------------------------
+# 2. Take the changes from main and lose changes on my-feature-branch
+#    Note that "ours" refers to main branch because you have main checked out
+git checkout --ours path/to/file
+
+# Double check, but local version of path/to/file should be same as main on GitHub
+# If it is then add and commit to complete the merge
+git add path/to/file
+git commit -m "Resolved merge conflict on path/to/file by accepting main branch version"
+git push origin main
+
+
+# ------------------------------------------------
+# 3. Take the changes from my-feature-branch and lose changes on main
+#    Note that "theirs" refers to my-feature-branch branch because you have main checked out
+git checkout --theirs path/to/file
+
+# Double check, but local version of path/to/file should be same as my-feature-branch on GitHub
+# If it is then add and commit to complete the merge
+git add path/to/file
+git commit -m "Resolved merge conflict on path/to/file by accepting my-feature-branch branch version"
+git push origin main
+
